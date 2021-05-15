@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="Settings",menuName ="Dungeon/Generation/Settings")]
 public class GenerationSettings : ScriptableObject
 {
+    public int Size;
     public int MaxRoomTries;
     public int MaxRooms;
     public Vector2 MinRoomSize;
@@ -12,4 +13,7 @@ public class GenerationSettings : ScriptableObject
 
     public int RoomBorderLeniancy;
     public int RoomBorderRetries;
+
+    
+    
 }

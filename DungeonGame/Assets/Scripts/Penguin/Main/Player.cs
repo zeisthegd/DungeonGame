@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
 
     void InitMovementType()
     {
-        SwitchMovementType(MovementState.Grounded);
+        SwitchMovementType(MovementState.Swim);
     }
 
     void OnCollisionEnter(Collision col)

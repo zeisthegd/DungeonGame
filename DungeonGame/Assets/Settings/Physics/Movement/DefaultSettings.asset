@@ -16,8 +16,8 @@ MonoBehaviour:
   jumpHeight: 10
   sprintMultiplier: 4
   turnSmooth: 0.1
-  turnSmoothVelocity: 638.50836
-  onlandGravity: 30
+  turnSmoothVelocity: 486.14615
+  onlandGravity: 10
   aerialGravity: 10
   swimmingGravity: 0
   camera: {fileID: 0}
