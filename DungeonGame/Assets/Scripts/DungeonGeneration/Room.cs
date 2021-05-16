@@ -5,11 +5,11 @@ using UnityEngine;
 public class Room
 {
     GenerationSettings settings;
-    Cell[,] map;
+    Maze maze;
     Cell[,] cells;
     public Room(Maze maze, GenerationSettings settings)
     {
-        this.map = maze.Map;
+        this.maze = maze;
         this.settings = settings;
     }
 
@@ -19,66 +19,39 @@ public class Room
         int roomStartPosX = random.Next(0, settings.Size);
         int roomStartPosY = random.Next(0, settings.Size);
 
-        if (!map[roomStartPosX, roomStartPosY].IsRoomCell)
+        if (maze.Map[roomStartPosX, roomStartPosY].TriedCreateHere == false
+            && maze.Map[roomStartPosX, roomStartPosY].IsRoomCell == false)
         {
-            for (int i = 0; i < (settings.MaxRoomSize.x + settings.MaxRoomSize.x) / 2; i++)
+            for (int i = 0; i < settings.MaxRoomTries; i++)
             {
                 int rHeight = random.Next((int)settings.MinRoomSize.x, (int)settings.MaxRoomSize.x);//vertical length
                 int rWidth = random.Next((int)settings.MinRoomSize.y, (int)settings.MaxRoomSize.y);//horizontal length
 
+                int bottomX = roomStartPosX + rHeight;
+                int rightY = roomStartPosY + rWidth;
 
-                if (RoomIsInMaze(roomStartPosX + rHeight, roomStartPosY + rWidth)
-                        && RoomIsNotOverlapping(roomStartPosX, roomStartPosY, rHeight, rWidth))
+                if (RoomIsInMaze(bottomX, rightY)
+                        && maze.RoomIsNotOverlapping(roomStartPosX, roomStartPosY, bottomX, rightY)
+                            && maze.RoomIsNotAdjacentToAnother(roomStartPosX, roomStartPosY, bottomX, rightY))
                 {
-                    SetRoomCells(roomStartPosX, roomStartPosY, rHeight, rWidth);
-                    UpdateRoomCellsWalls(roomStartPosX, roomStartPosY, rHeight, rWidth);
-                    Debug.Log($"Created: Height = {rHeight} || Width = {rWidth}"
-                                     + $"|| Random Start X = {roomStartPosX} || Random Start X = {roomStartPosY}");
-                    return true;
-                }
-                else
-                {
-                    Debug.Log($"Failed: Height = {rHeight} || Width = {rWidth}"
-                                     + $"|| Random Start X = {roomStartPosX} || Random Start X = {roomStartPosY}");
+                    maze.SetRoomCells(roomStartPosX, roomStartPosY, bottomX, rightY);
+                    maze.UpdateRoomCellsWalls(roomStartPosX, roomStartPosY, bottomX, rightY);
+                    maze.Map[roomStartPosX, roomStartPosY].TriedCreateHere = true;
+                    Debug.Log($"Room: {roomStartPosX}|{roomStartPosY}|{bottomX}|{rightY}");
+                    return true;    
                 }
             }
+            maze.Map[roomStartPosX, roomStartPosY].TriedCreateHere = true;
         }
         return false;
     }
 
     private bool RoomIsInMaze(int x, int z)
     {
-        return x < settings.Size && z < settings.Size
-        && x >= 0 && z >= 0;
+        bool isInMaze = x < settings.Size && z < settings.Size
+            && x >= 0 && z >= 0;
+        return isInMaze;
     }
 
-    private bool RoomIsNotOverlapping(int startX, int startY, int height, int width)
-    {
-        return map[startX, startY].IsRoomCell == false
-                && map[startX + height, startY].IsRoomCell == false
-                && map[startX, startY + width].IsRoomCell == false
-                && map[startX + height, startY + width].IsRoomCell == false;
-    }
 
-    private void SetRoomCells(int startX, int startY, int height, int width)
-    {
-        for (int i = startX; i < startX + height; i++)
-        {
-            for (int j = startY; j < startY + width; j++)
-            {
-                map[i, j].IsRoomCell = true;
-            }
-        }
-    }
-
-    private void UpdateRoomCellsWalls(int startX, int startY, int height, int width)
-    {
-        for (int i = startX; i < startX + height; i++)
-        {
-            for (int j = startY; j < startX + height; j++)
-            {
-                map[i, j].UpdateWalls(map);
-            }
-        }
-    }
 }

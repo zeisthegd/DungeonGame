@@ -12,21 +12,25 @@ public class Cell : MonoBehaviour
     private bool isRoom;
     [SerializeField]
     private bool[] availDirections;//NESW
+    [SerializeField]
+    private bool[] availWalls;//NESW
     private bool closeToRoom;
     private bool isDoor;
+    [SerializeField]
     private bool isRoomCell;
+    private bool triedCreateHere;
 
-
-
-    
     public Cell(Vector2 position)
     {
         this.position = position;
         isRoomCell = false;
         isDoor = false;
+        triedCreateHere = false;
         closeToRoom = false;
         isVisited = false;
         availDirections = new bool[4] { true, true, true, true };
+        availWalls = new bool[4] { true, true, true, true };
+
     }
 
     public Cell()
@@ -42,9 +46,9 @@ public class Cell : MonoBehaviour
 
     public void DestroyUnavailableWalls()
     {
-        
+
         for (int i = 0; i < 4; i++)
-            if (availDirections[i] == false)
+            if (availWalls[i] == false)
                 DestroyWallOnIndex(i);
     }
 
@@ -77,34 +81,35 @@ public class Cell : MonoBehaviour
         Destroy(wall.gameObject);
     }
 
-    public void UpdateWalls(Cell[,] map)
+    public void UpdateAvailableWalls(Cell[,] map)
     {
-        if (isRoomCell)
+        if (position.x >= 0 && position.x < Math.Sqrt(map.Length) - 1)//Xet
         {
-            if (position.x > 0 && position.x < map.Length)//Xet
+            if (position.x > 0 && map[(int)position.x - 1, (int)position.y].isRoomCell == true)
             {
-                if (map[(int)position.x - 1, (int)position.y].isRoomCell == true)
-                {
-                    availDirections[0] = false;
-                }
-                if (map[(int)position.x + 1, (int)position.y].isRoomCell == true)
-                {
-                    availDirections[2] = false;
-                }
+                availWalls[0] = false;
             }
-            if (position.y > 0 && position.y < map.Length)
+
+            if (map[(int)position.x + 1, (int)position.y].isRoomCell == true)
             {
-                if (map[(int)position.x, (int)position.y + 1].isRoomCell == true)
-                {
-                    availDirections[1] = false;
-                }
-                if (map[(int)position.x, (int)position.y - 1].isRoomCell == true)
-                {
-                    availDirections[3] = false;
-                }
+                availWalls[2] = false;
+            }
+        }
+        if (position.y >= 0 && position.y < Math.Sqrt(map.Length) - 1)
+        {
+            if (map[(int)position.x, (int)position.y + 1].isRoomCell == true)
+            {
+                availWalls[1] = false;
+            }
+
+            if (position.y > 0 && map[(int)position.x, (int)position.y - 1].isRoomCell == true)
+            {
+                availWalls[3] = false;
             }
         }
     }
+
+
 
     public Vector2 Position { get => position; set => position = value; }
     public bool IsVisited { get => isVisited; set => isVisited = value; }
@@ -113,4 +118,6 @@ public class Cell : MonoBehaviour
     public bool CloseToRoom { get => closeToRoom; set => closeToRoom = value; }
     public bool IsDoor { get => isDoor; set => isDoor = value; }
     public bool IsRoomCell { get => isRoomCell; set => isRoomCell = value; }
+    public bool[] AvailWalls { get => availWalls; set => availWalls = value; }
+    public bool TriedCreateHere { get => triedCreateHere; set => triedCreateHere = value; }
 }

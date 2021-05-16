@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: DefaultSettings
   m_EditorClassIdentifier: 
   Size: 20
-  MaxRoomTries: 1000
-  MaxRooms: 6
-  MinRoomSize: {x: 3, y: 3}
+  MaxRoomTries: 10000
+  MaxRooms: 5
+  MinRoomSize: {x: 4, y: 4}
   MaxRoomSize: {x: 8, y: 8}
   RoomBorderLeniancy: 3
   RoomBorderRetries: 10

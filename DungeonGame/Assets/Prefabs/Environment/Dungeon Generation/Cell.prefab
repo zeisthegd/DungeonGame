@@ -144,6 +144,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   availDirections: 01010101
+  availWalls: 01010101
+  isRoomCell: 0
 --- !u!1 &5059601854374107041
 GameObject:
   m_ObjectHideFlags: 0
