@@ -8,10 +8,8 @@ public class MovementSettings : ScriptableObject
     public float moveSpeed;
     public float jumpHeight;
     public float sprintMultiplier;
-    public float turnSmooth;
-    public float turnSmoothVelocity;
     public float onlandGravity;
-    public float aerialGravity;
     public float swimmingGravity;
+    public float mouseSensitivity;
     public Camera camera;
 }

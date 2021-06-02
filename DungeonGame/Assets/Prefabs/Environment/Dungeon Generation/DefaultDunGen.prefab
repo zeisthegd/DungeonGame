@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 1579278883459387901}
   - component: {fileID: 1579278883459387900}
   m_Layer: 0
-  m_Name: DungeonGenerator
-  m_TagString: Untagged
+  m_Name: DefaultDunGen
+  m_TagString: DungeonGenerator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4
   m_IsActive: 1
 --- !u!4 &1579278883459387901
 Transform:
@@ -44,3 +44,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 0d675e43ecbf70e4b8fb383c7c7e2414, type: 2}
+  cellType: {fileID: 5059601853903931715, guid: 6b5d28e85a4ba414e90e7a9dea672e77,
+    type: 3}

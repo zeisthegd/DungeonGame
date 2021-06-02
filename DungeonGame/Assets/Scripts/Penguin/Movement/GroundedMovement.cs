@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GroundedMovement : MovementController
 {
+
+    float horInp = 0;
+    float vertInp = 0;
+
     public GroundedMovement() : base()
     {
     }
@@ -14,42 +18,33 @@ public class GroundedMovement : MovementController
 
     public override void HandleInput()
     {
-        base.HandleInput();
         ApplyGroundMovement();
         ApplyGravity();
-    }
-
-    public override void HandleAnimationTransition()
-    {
-
+        base.HandleInput();
     }
 
     private void ApplyGroundMovement()
     {
-        float horInp = Input.GetAxisRaw("Horizontal");
-        float vertInp = Input.GetAxisRaw("Vertical");
-        Vector3 direction = new Vector3(horInp, 0F, vertInp).normalized;
+        horInp = Input.GetAxisRaw("Horizontal");
+        vertInp = Input.GetAxisRaw("Vertical");
 
-        animator.SetBool("isSwimming", direction.magnitude >= 0.1F);
-        Debug.DrawRay(settings.camera.transform.position, settings.camera.transform.forward * 100F, Color.blue);
+        float speedMultiplier = (Input.GetButton("Sprint")) ? settings.sprintMultiplier : 1;
+        Vector3 move = rb2d.transform.right * horInp + rb2d.transform.forward * vertInp;
 
-        if (direction.magnitude >= 0.1F)
-        {
-            float horAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + settings.camera.transform.eulerAngles.y;
-            float angleY = Mathf.SmoothDampAngle(objectTrf.eulerAngles.y, horAngle, ref settings.turnSmoothVelocity, settings.turnSmooth);
-            objectTrf.rotation = Quaternion.Euler(0F, angleY, 0F);
 
-            direction = Quaternion.Euler(0F, horAngle, 0F) * Vector3.forward;
-
-            rb2d.AddForce(direction * settings.moveSpeed * settings.sprintMultiplier * Time.deltaTime, ForceMode.Acceleration);
-        }
-
+        rb2d.AddForce(move * settings.moveSpeed * speedMultiplier * Time.deltaTime, ForceMode.Impulse);
     }
 
     private void ApplyGravity()
     {
         Vector3 jumpForce = Vector3.down * settings.onlandGravity;
         rb2d.AddForce(jumpForce, ForceMode.Force);
+    }
+
+    public override void HandleAnimationTransition()
+    {
+        animator.SetBool("isWalking", horInp != 0 || vertInp != 0);
+        animator.SetFloat("vertVel", vertInp * rb2d.velocity.magnitude);
     }
 
     public override void ResetState()

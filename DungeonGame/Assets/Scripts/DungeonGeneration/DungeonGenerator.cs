@@ -8,6 +8,8 @@ public class DungeonGenerator : MonoBehaviour
     GenerationSettings settings;
     [SerializeField]
     GameObject cellType;
+    [SerializeField]
+    bool toGenerate = false;
 
     Maze maze;
 
@@ -15,18 +17,31 @@ public class DungeonGenerator : MonoBehaviour
 
     void Awake()
     {
-        StartCoroutine(GenerateMaze());
+        if (toGenerate)
+        {
+            StartCoroutine(InitializeMaze());
+            StartCoroutine(GenerateCorridors());
+        }
+
     }
     void Start()
     {
-
-        GenerateDungeonFromMaze();
+        if (toGenerate)
+        {
+            GenerateDungeonFromMaze();
+        }
     }
 
-    private IEnumerator GenerateMaze()
+    private IEnumerator InitializeMaze()
     {
         maze = new Maze(settings);
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(4);
+    }
+
+    public IEnumerator GenerateCorridors()
+    {
+        maze.RunMazeAlgorithm();
+        yield return new WaitForSeconds(6);
     }
 
     private void GenerateDungeonFromMaze()
@@ -50,7 +65,18 @@ public class DungeonGenerator : MonoBehaviour
         cellscrpit.IsRoomCell = data.IsRoomCell;
         cellscrpit.AvailDirections = data.AvailDirections;
         cellscrpit.AvailWalls = data.AvailWalls;
+        cellscrpit.IsDoor = data.IsDoor;
 
+    }
+
+    public void GenerateDungeon()
+    {
+        Cell[] cells = FindObjectsOfType<Cell>();
+        foreach (Cell cell in cells)
+            Destroy(cell.gameObject);
+        StartCoroutine(InitializeMaze());
+        StartCoroutine(GenerateCorridors());
+        GenerateDungeonFromMaze();
     }
 
 

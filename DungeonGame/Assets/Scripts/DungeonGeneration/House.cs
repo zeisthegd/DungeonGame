@@ -16,9 +16,24 @@ public class House
     {
         this.rooms = rooms;
     }
+
+    public void GenerateRooms()
+    {
+        GenerateDoors();
+    }
     
     private void GenerateDoors()
     {
-        
+        foreach (Room room in rooms)
+        {
+            room.CreateDoor();
+        }
     }
+
+    public void AddRoom(Room room)
+    {
+        rooms.Add(room);
+    }
+
+    
 }

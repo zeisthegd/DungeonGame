@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c684c45c380b6e2479aa6ff3c2ff9f67, type: 3}
   m_Name: DefaultSettings
   m_EditorClassIdentifier: 
-  Size: 20
-  MaxRoomTries: 10000
+  Size: 30
+  MaxRoomTries: 300
+  MinRooms: 3
   MaxRooms: 5
   MinRoomSize: {x: 4, y: 4}
   MaxRoomSize: {x: 8, y: 8}

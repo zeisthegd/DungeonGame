@@ -143,8 +143,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e9092ea350b0a4a93df18fe54afb07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  availDirections: 01010101
-  availWalls: 01010101
+  door: {fileID: 0}
+  availWalls: 00010100
+  isDoor: 0
   isRoomCell: 0
 --- !u!1 &5059601854374107041
 GameObject:

@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     Rigidbody rb2d;
     Animator animator;
 
+
     void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -25,13 +26,12 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        movementController.HandleInput();
 
     }
 
     void FixedUpdate()
     {
-
+        movementController.HandleInput();
     }
 
     void GetAllComponents()
@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
 
     void InitMovementType()
     {
-        SwitchMovementType(MovementState.Swim);
+        SwitchMovementType(MovementState.Grounded);
     }
 
     void OnCollisionEnter(Collision col)
