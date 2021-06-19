@@ -127,28 +127,25 @@ public class Maze
 
     #region Maze Generation
 
-
-
-    public void RunMazeAlgorithm()
+    public void GenerateCorridors()
     {
         System.Random random = new System.Random();
         List<Cell> corCells = GetNonRoomCells();
+        Cell startCell = corCells[random.Next(0, corCells.Count)];
+        RunMazeAlgorithm(startCell);
+    }
 
-        for (int i = 0; i < corCells.Count; i++)
+    private void RunMazeAlgorithm(Cell cell)
+    {
+        System.Random random = new System.Random();
+        cell.IsVisited = true;
+        List<Cell> neighbors = GetNeighborCellsOf(cell);
+        for (int i = 0; i < neighbors.Count; i++)
         {
-            Cell currentCell = corCells[i];
-            currentCell.IsVisited = true;
-            List<Cell> neighbors = GetNeighborCellsOf(currentCell);
-            if (neighbors.Count != 0)
-            {
-                Cell nextCellInPath = neighbors[random.Next(0, neighbors.Count)];
-                //Debug.Log(neighbors.Count);
-                DeleteWallInBetween(currentCell, nextCellInPath);
-                if (nextCellInPath.IsVisited == false)
-                    corCells.Add(nextCellInPath);
-            }
-            else
-                corCells.Remove(corCells[i]);
+            Cell nextCellInPath = neighbors[random.Next(0, neighbors.Count)];
+            DeleteWallInBetween(cell, nextCellInPath);
+            RunMazeAlgorithm(nextCellInPath);
+            neighbors.Remove(nextCellInPath);
         }
     }
 
@@ -169,10 +166,12 @@ public class Maze
         for (int i = 0; i < 4; i++)
         {
             Cell neighbor = GetCellAtDirection(cell, i);
-
-            if (!neighbor.Position.Equals(new Vector2(-1, -1)) && !neighbor.IsVisited && !neighbor.IsRoomCell)
+            if (!neighbor.Position.Equals(new Vector2(-1, -1)))
             {
-                cells.Add(neighbor);
+                if (!neighbor.IsVisited && !neighbor.IsRoomCell)
+                    cells.Add(neighbor);
+                else if (neighbor.IsDoor)
+                    DeleteWallInBetween(cell, neighbor);
             }
         }
         return cells;
@@ -210,36 +209,36 @@ public class Maze
             if (wallsToDel[i] == false)
             {
                 int oppDir = (i % 2 == 0) ? ((i == 0) ? 2 : 0) : ((4 - i) % 4);
-        a.AvailWalls[i] = false;
-        b.AvailWalls[oppDir] = false;
-        return;
-    }
+                a.AvailWalls[i] = false;
+                b.AvailWalls[oppDir] = false;
+                return;
+            }
 
-}
+        }
     }
 
     public void SetDoorCell(int x, int y)
-{
-    map[x, y].IsDoor = true;
-    DeleteWallInBetween(map[x, y], map[x + 1, y]);
-    DeleteWallInBetween(map[x, y], map[x - 1, y]);
-    DeleteWallInBetween(map[x, y], map[x, y + 1]);
-    DeleteWallInBetween(map[x, y], map[x, y - 1]);
-}
-
-#endregion
-private void ClearTriedAttempts()
-{
-    foreach (Cell cell in map)
     {
-        if (cell.IsRoomCell == false)
-            cell.TriedCreateHere = false;
+        map[x, y].IsDoor = true;
+        DeleteWallInBetween(map[x, y], map[x + 1, y]);
+        DeleteWallInBetween(map[x, y], map[x - 1, y]);
+        DeleteWallInBetween(map[x, y], map[x, y + 1]);
+        DeleteWallInBetween(map[x, y], map[x, y - 1]);
     }
-    house = new House();
-}
+
+    #endregion
+    private void ClearTriedAttempts()
+    {
+        foreach (Cell cell in map)
+        {
+            if (cell.IsRoomCell == false)
+                cell.TriedCreateHere = false;
+        }
+        house = new House();
+    }
 
 
-public Cell[,] Map { get => map; }
+    public Cell[,] Map { get => map; }
 }
 
 

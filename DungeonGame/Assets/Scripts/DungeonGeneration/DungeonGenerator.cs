@@ -40,7 +40,7 @@ public class DungeonGenerator : MonoBehaviour
 
     public IEnumerator GenerateCorridors()
     {
-        maze.RunMazeAlgorithm();
+        maze.GenerateCorridors();
         yield return new WaitForSeconds(6);
     }
 
@@ -54,7 +54,6 @@ public class DungeonGenerator : MonoBehaviour
                 CopyCellValue(maze.Map[i, j]);
                 cellType.name = $"Cell[{i},{j}]";
                 Instantiate(cellType, spawnPos, Quaternion.identity, this.transform);
-
             }
         }
     }
